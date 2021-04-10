@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-//import 'package:image_picker/image_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import '../common/common.dart';
 import '../../providers/place_provider.dart';
@@ -173,10 +173,23 @@ class _PlaceFormState extends State<PlaceForm> {
 
   void _openCamera(BuildContext context) async {
     //Add Code
+    final pickedFile = await ImagePicker().getImage(
+      source: ImageSource.camera,
+      imageQuality: 80,
+    );
+    setState(() {
+      _imageFile = File(pickedFile.path);
+    });
   }
 
   void _openGallery(BuildContext context) async {
     //Add Code
+    final pickedFile = await ImagePicker().getImage(
+      source: ImageSource.gallery,
+    );
+    setState(() {
+      _imageFile = File(pickedFile.path);
+    });
   }
 
   Future _showChoiceDialog(BuildContext context) async {

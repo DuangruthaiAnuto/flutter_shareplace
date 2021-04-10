@@ -38,6 +38,14 @@ class PlaceProvider {
     String imagUrl = "";
 
     //Add Code
+    FirebaseStorage storage = FirebaseStorage.instance;
+    Reference ref = storage.ref().child("image_" + DateTime.now().toString());
+    UploadTask uploadTask = ref.putFile(_imageFile);
+    await uploadTask.then((res) async {
+      await res.ref.getDownloadURL().then((value) {
+        imagUrl = value;
+      });
+    });
 
     return imagUrl;
   }
@@ -47,11 +55,25 @@ class PlaceProvider {
     String placeId = "";
 
     //Add Code
+    //await Firebase.initializeApp();
+    await FirebaseFirestore.instance.collection("places").add({
+      "title": title,
+      "description": description,
+      "imageUrl": imagUrl,
+      "location": new GeoPoint(lat, lng),
+    }).then((value) {
+      placeId = value.id;
+    });
 
     return placeId;
   }
 
   Future removePlaces(String _placeId) async {
     //Add Code
+    //await Firebase.initializeApp();
+    await FirebaseFirestore.instance
+        .collection("places")
+        .doc(_placeId)
+        .delete();
   }
 }
